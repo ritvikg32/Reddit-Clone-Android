@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Reddit Android</string>
+
+    //Misc
+    <string name="sp_token_key">TOKEN</string>
+
+    //Login Activity
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="signup_text">New to Reddit?</string>
+    <string name="signup">Signup</string>
+    <string name="username_hint">Username</string>
+    <string name="login_heading_txt">Login to Reddit</string>
+    <string name="signup_headin_txt">Create an account</string>
+    //Validation
+    <string name="invalid_email">Please enter valid email address</string>
+    <string name="invalid_password">Please enter a valid password</string>
+
+    //Authentication
+    <string name="wrong_credentials">Wrong username or password</string>
+    <string name="error_txt">Something went wrong</string>
+    <string name="isnt_available">Username or Email already in use</string>
+
+    //Home Activity
+    <string name="search_hint">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="tab_title">
+        <item>Home</item>
+        <item>Popular</item>
+    </string-array>
+
+
+    //Home Actibity spinner items
+    <string-array name="spinnerItems">
+        <item>Best</item>
+        <item>Hot</item>
+        <item>New</item>
+        <item>Top</item>
+    </string-array>
+</resources>

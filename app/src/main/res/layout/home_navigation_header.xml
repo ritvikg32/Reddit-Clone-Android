@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/header_profile_pic"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_baseline_account_circle_24"
+        />
+    <TextView
+        android:id="@+id/nav_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="u/account"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal">
+
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="35dp">
+
+            <ImageView
+                android:id="@+id/karma_image"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_karma_blue"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/karma_int"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="250"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/karma_image"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Karma"
+                android:textSize="9sp"
+                android:layout_alignStart="@id/karma_int"
+                android:layout_alignBottom="@id/karma_int"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@id/karma_int" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp">
+
+            <ImageView
+                android:id="@+id/age_img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_cake_blue"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/age_int"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="250"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/age_img"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9sp"
+                android:text="Reddit Age"
+                android:layout_alignStart="@id/age_int"
+                android:layout_alignBottom="@id/age_int"
+                android:layout_alignParentBottom="true"
+                android:layout_alignLeft="@id/age_int" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

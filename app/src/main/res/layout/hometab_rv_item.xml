@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_marginBottom="10dp"
+    android:background="#F8F8FF">
+
+    //Post Title
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="20dp">
+
+        <ImageView
+            android:id="@+id/rv_community_dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="30dp">
+            <TextView
+                android:id="@+id/rv_community_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text = "r/battlestation"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/rv_posted_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text = "Posted by xyz"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+
+
+        
+    </LinearLayout>
+
+    //Content
+    <TextView
+        android:id="@+id/rv_content_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:visibility="gone"
+        tools:text="@tools:sample/lorem/random"/>
+    <ImageView
+        android:id="@+id/rv_content_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="30dp"/>
+
+    //Awards layout
+    <com.example.redditandroid.ui.Adapter.PostRecyclerView
+        android:id="@+id/award_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"/>
+    <TextView
+        android:id="@+id/post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a sample title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/post_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"/>
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/home_tab_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_volume_up_24"
+            android:layout_gravity="end|bottom"
+            android:id="@+id/volume_control"
+            android:alpha="0"
+            android:animateLayoutChanges="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"/>
+        <ProgressBar
+            android:id="@+id/video_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </com.google.android.exoplayer2.ui.PlayerView>
+
+    //Upvotes, Comments layout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/rv_upvote_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_iconmonstr_arrow_12"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:tint="@color/icon_grey"/>
+        <TextView
+            android:id="@+id/rv_upvote_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8sp"
+            tools:text="3.5k"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/rv_upvote_btn"/>
+        <ImageButton
+            android:id="@+id/rv_downvote_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_iconmonstr_arrow_down"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:tint="@color/icon_grey"
+            android:layout_toRightOf="@id/rv_upvote_no"/>
+
+        <ImageButton
+            android:id="@+id/rv_comment_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chat_bubble_24px"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerInParent="true"
+            android:background="@null"/>
+        <TextView
+            android:id="@+id/rv_comment_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8sp"
+            tools:text="3.5k"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/rv_comment_btn"/>
+        <ImageButton
+            android:id="@+id/rv_give_award_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_giftbox"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:tint="@color/icon_grey"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"/>
+    </RelativeLayout>
+
+</LinearLayout>
