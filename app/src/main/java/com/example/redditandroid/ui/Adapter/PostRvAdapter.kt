@@ -4,9 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,8 +13,11 @@ import com.example.redditandroid.R
 import com.example.redditandroid.models.PostData
 import com.example.redditandroid.models.PostData1Children
 import com.example.redditandroid.ui.Activities.VideoPlayback
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.common.hash.HashingOutputStream
 
 
 class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerView.Adapter<PostRvAdapter.myViewHolder>(), Player.EventListener {
@@ -26,6 +27,7 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
     lateinit var currentHolder:myViewHolder
     val videoPlaybackService:VideoPlayback = VideoPlayback
     var requestManager:RequestManager
+    lateinit var simpleExoPlayer:SimpleExoPlayer
 
     lateinit var adapter:AwardListAdapter
 
@@ -53,6 +55,7 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
         var exoPlayerView:PlayerView
         var volumeControl:ImageView
         var requestManager:RequestManager
+        var exoFrameLayout:FrameLayout
 
         init {
             postedByText = view.findViewById(R.id.rv_posted_by)
@@ -68,6 +71,7 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
             exoPlayerView = view.findViewById(R.id.home_tab_vp)
             volumeControl = view.findViewById(R.id.volume_control)
             this.requestManager = requestManager
+            exoFrameLayout = view.findViewById(R.id.exo_frame_layout)
         }
     }
 
@@ -93,11 +97,17 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
 
 
 
-        if(theItem.is_video==false)
+        if(!theItem.is_video) {
             setImage(theItem, holder.postImg)
+            holder.exoPlayerView.visibility = View.INVISIBLE
+        }
         else{
-//            setVideo(theItem.media.dash_url)
-
+            if(theItem.media!=null) {
+                holder.postImg.visibility = View.INVISIBLE
+                simpleExoPlayer = videoPlaybackService.buildPlayer(mContext)
+                holder.exoPlayerView.player = simpleExoPlayer
+                setVideo(dashURL = theItem.media.dash_url)
+            }
         }
 
         adapter = AwardListAdapter(mContext, theItem.all_awardings)
@@ -141,9 +151,13 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
     }
 
     fun setVideo(dashURL:String){
+
         videoPlaybackService.dashURL = dashURL
         currentHolder.exoPlayerView.player = videoPlaybackService.buildPlayer(mContext)
-        videoPlaybackService.initializePlayer()
+//        videoPlaybackService.initializePlayer()
+        videoPlaybackService.buildMediaSource()
+        videoPlaybackService.startPlayback()
+
 
     }
 

@@ -135,10 +135,18 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
 
     fun getVideoList(postData1Children:ArrayList<PostData1Children>): java.util.ArrayList<com.example.redditandroid.models.RedditVideo>? {
         val vidList = ArrayList<RedditVideo>() as java.util.ArrayList<com.example.redditandroid.models.RedditVideo>?
+        val numList = mutableListOf<String>()
         for(ent in postData1Children){
-            if(ent.data.is_video)
+            if(ent.data.is_video && ent.data.media!=null) {
                 vidList?.add(ent.data.media)
+                numList.add(ent.data.title)
+                Log.d("NUM_LIST",numList.toString())
+            }
+
         }
+        vidList?.get(0)?.let { Log.d("VIDEO_LIST", it.toString()) }
+
+
         return vidList
     }
 
@@ -148,7 +156,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
             progressBar.visibility = View.GONE
             postRvAdapter.postList = it
             postRvAdapter.notifyDataSetChanged()
-            postRv.setMediaObjects(getVideoList(it))
+//            postRv.setMediaObjects(getVideoList(it))
         })
     }
 

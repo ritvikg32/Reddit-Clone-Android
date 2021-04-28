@@ -3,6 +3,7 @@ package com.example.redditandroid.ui.Activities
 import android.content.Context
 import android.content.MutableContextWrapper
 import android.net.Uri
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
@@ -21,23 +22,30 @@ object VideoPlayback: Player.EventListener {
 
 
 
+
     private val dataSourceFactory: DataSource.Factory by lazy {
         DefaultDataSourceFactory(mContext, "exoplayer-sample")
     }
 
     fun buildPlayer(mContext: Context):SimpleExoPlayer{
+        this.mContext = mContext
         simpleExoplayer = SimpleExoPlayer.Builder(VideoPlayback.mContext).build()
         return simpleExoplayer
     }
 
     fun initializePlayer(){
 
-        preparePlayer(dashURL, "dash")
-//        exoplayerView.player = simpleExoplayer
         simpleExoplayer.seekTo(playbackPosition)
         simpleExoplayer.playWhenReady = true
         simpleExoplayer.addListener(this)
     }
+
+    fun startPlayback(){
+        simpleExoplayer.prepare()
+        simpleExoplayer.play()
+    }
+
+
 
     fun releasePlayer(){
         playbackPosition = simpleExoplayer.currentPosition
@@ -46,20 +54,17 @@ object VideoPlayback: Player.EventListener {
 
 
 
-    fun preparePlayer(videoUrl: String, type: String) {
-        val uri = Uri.parse(videoUrl)
-        val mediaSource = buildMediaSource(uri, type)
-        simpleExoplayer.prepare(mediaSource)
-    }
 
-    private fun buildMediaSource(uri: Uri, type: String): MediaSource {
-        return if (type == "dash") {
-            DashMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri)
-        } else {
-            ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri)
-        }
+    fun buildMediaSource(){
+//        return if (type == "dash") {
+//            DashMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(uri)
+//        } else {
+//            ProgressiveMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(uri)
+//        }
+        val mediaItem = MediaItem.fromUri(dashURL)
+        simpleExoplayer.setMediaItem(mediaItem)
     }
 
 
