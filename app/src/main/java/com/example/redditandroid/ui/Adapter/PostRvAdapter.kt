@@ -1,9 +1,11 @@
 package com.example.redditandroid.ui.Adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import com.bumptech.glide.RequestManager
 import com.example.redditandroid.R
 import com.example.redditandroid.models.PostData
 import com.example.redditandroid.models.PostData1Children
+import com.example.redditandroid.models.SubredditParentMine
 import com.example.redditandroid.ui.Activities.VideoPlayback
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -23,6 +26,8 @@ import com.google.common.hash.HashingOutputStream
 class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerView.Adapter<PostRvAdapter.myViewHolder>(), Player.EventListener {
 
     var postList:ArrayList<PostData1Children> = ArrayList()
+    var subredditMineListingChildren:ArrayList<SubredditParentMine> = ArrayList<SubredditParentMine>()
+
     var mContext: Context
     lateinit var currentHolder:myViewHolder
     val videoPlaybackService:VideoPlayback = VideoPlayback
@@ -93,32 +98,76 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
         holder.commentNo.text = theItem.num_comments.toString()
         holder.postTitle.text = theItem.title.toString()
 
-
+        simpleExoPlayer = VideoPlayback.buildPlayer(mContext)
 
 
 
         if(!theItem.is_video) {
             setImage(theItem, holder.postImg)
             holder.exoPlayerView.visibility = View.INVISIBLE
+            holder.postImg.visibility = View.VISIBLE
         }
         else{
             if(theItem.media!=null) {
-                holder.postImg.visibility = View.INVISIBLE
-                simpleExoPlayer = videoPlaybackService.buildPlayer(mContext)
+                holder.postImg.visibility = View.GONE
+                holder.exoPlayerView.visibility = View.VISIBLE
+                simpleExoPlayer = VideoPlayback.buildPlayer(mContext)
                 holder.exoPlayerView.player = simpleExoPlayer
+                holder.exoFrameLayout.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, theItem.media.reddit_video.height)
                 setVideo(dashURL = theItem.media.reddit_video.dash_url)
             }
         }
+
+
 
         adapter = AwardListAdapter(mContext, theItem.all_awardings)
         holder.awardRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         holder.awardRv.adapter = adapter
 
+        Glide.with(mContext).load(getSubredditIconImg(theItem.subreddit_name_prefixed)).circleCrop().into(holder.subredditDp)
+
+
+        //Listening for exoplayer event callbacks
+        holder.exoPlayerView.player?.addListener(object :Player.EventListener{
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+
+                if (playbackState == Player.STATE_BUFFERING)
+                    holder.videoProgressBar.visibility = View.VISIBLE
+                else if (playbackState == Player.STATE_READY || playbackState == Player.STATE_ENDED) {
+                    holder.videoProgressBar.visibility = View.INVISIBLE
+                    Log.d("EXO","Event Listener called")
+                }
+
+            }
+        })
 
 
 
 
 
+
+    }
+
+
+    //RUNTIME EXCEPTION --------- CLASS CAST EXCEPTION FLOAT TO INTEGER
+    fun pxToDp(pxValue:Int):Int{
+        val displayMetrics = mContext.getResources().getDisplayMetrics();
+        return ((pxValue * displayMetrics.density) + 0.5) as Int
+    }
+
+    fun getSubredditIconImg(subredditName:String):String?{
+        Log.d("getter","gets called with name $subredditName")
+        for(sub in subredditMineListingChildren){
+            if(sub.data.display_name_prefixed.equals(subredditName)) {
+
+                Log.d("getter","was compared to ${sub.data.display_name_prefixed}")
+                Log.d("getter","icon url ${sub.data.icon_img}")
+                return sub.data.icon_img
+            }
+            else
+                Log.d("getter","null")
+        }
+        return null
     }
 
     fun getVoteNofromInt(votes:Int):String{
@@ -152,11 +201,11 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
 
     fun setVideo(dashURL:String){
 
-        videoPlaybackService.dashURL = dashURL
-        currentHolder.exoPlayerView.player = videoPlaybackService.buildPlayer(mContext)
+        VideoPlayback.dashURL = dashURL
+        currentHolder.exoPlayerView.player = VideoPlayback.buildPlayer(mContext)
 //        videoPlaybackService.initializePlayer()
-        videoPlaybackService.buildMediaSource()
-        videoPlaybackService.startPlayback()
+        VideoPlayback.buildMediaSource()
+        VideoPlayback.startPlayback()
 
 
     }
@@ -165,12 +214,6 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
         return postList.size
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        if (playbackState == Player.STATE_BUFFERING)
-            currentHolder.videoProgressBar.visibility = View.VISIBLE
-        else if (playbackState == Player.STATE_READY || playbackState == Player.STATE_ENDED)
-            currentHolder.videoProgressBar.visibility = View.INVISIBLE
-    }
 
 
 }

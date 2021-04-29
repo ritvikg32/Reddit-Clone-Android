@@ -44,6 +44,8 @@ interface ApiService {
     @GET(value="r/{subreddit_name}/about")
     suspend fun getSubredditInfo(@Path("subreddit_name")subredditName:String):Response<SubredditParent>
 
+    @GET(value = "subreddits/mine/{where}")
+    suspend fun getSubredditSubscriber(@Path("where")infoType:String):Response<SubredditMineListingParent>
 
 
 

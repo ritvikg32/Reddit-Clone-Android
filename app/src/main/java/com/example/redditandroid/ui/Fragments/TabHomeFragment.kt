@@ -21,6 +21,8 @@ import com.example.redditandroid.R
 import com.example.redditandroid.api.UserAuthentication
 import com.example.redditandroid.models.PostData1Children
 import com.example.redditandroid.models.RedditVideo
+import com.example.redditandroid.models.SubredditMineListing
+import com.example.redditandroid.models.SubredditParentMine
 import com.example.redditandroid.mv.TabHomeViewModel
 import com.example.redditandroid.ui.Adapter.PostRecyclerView
 import com.example.redditandroid.ui.Adapter.PostRvAdapter
@@ -46,6 +48,8 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
 
 
     var postList:ArrayList<PostData1Children> = ArrayList<PostData1Children>()
+    var subredditMineListingChildren:ArrayList<SubredditParentMine> = ArrayList<SubredditParentMine>()
+
     val viewModel:TabHomeViewModel = TabHomeViewModel()
 
     override fun onAttach(context: Context) {
@@ -62,6 +66,8 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
 
         if(viewModel.postList.value == null)
             viewModel.getBestPost()
+        if(viewModel.subscribedSubredditList.value==null)
+            viewModel.getSubscribedSubreddits()
     }
 
     var popupWindow:PopupWindow?=null
@@ -79,7 +85,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
         postRv.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         postRvAdapter = activity?.applicationContext?.let { PostRvAdapter(it, initGlide())}!!
         postRv.adapter = postRvAdapter
-        setupVideo()
+
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.VISIBLE
 
@@ -120,35 +126,15 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
             .setDefaultRequestOptions(options)
     }
 
-    fun setupVideo(){
-        
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscriebUI()
         val userAuth:UserAuthentication = UserAuthentication(this)
 
-
-
     }
 
-    fun getVideoList(postData1Children:ArrayList<PostData1Children>): java.util.ArrayList<com.example.redditandroid.models.RedditVideo>? {
-        val vidList = ArrayList<RedditVideo>() as java.util.ArrayList<com.example.redditandroid.models.RedditVideo>?
-        val numList = mutableListOf<String>()
-        for(ent in postData1Children){
-            if(ent.data.is_video && ent.data.media!=null) {
-                vidList?.add(ent.data.media.reddit_video)
-                numList.add(ent.data.title)
-                Log.d("NUM_LIST",numList.toString())
-            }
-
-        }
-        vidList?.get(0)?.let { Log.d("VIDEO_LIST", it.toString()) }
-
-
-        return vidList
-    }
 
     fun subscriebUI(){
         viewModel.postList.observe(viewLifecycleOwner, Observer {
@@ -157,6 +143,11 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
             postRvAdapter.postList = it
             postRvAdapter.notifyDataSetChanged()
 //            postRv.setMediaObjects(getVideoList(it))
+        })
+
+        viewModel.subscribedSubredditList.observe(viewLifecycleOwner, Observer {
+            subredditMineListingChildren = it.children
+            postRvAdapter.subredditMineListingChildren = subredditMineListingChildren
         })
     }
 
@@ -202,5 +193,6 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
     override fun onUserAuthenticated() {
         Log.d("post","User authenticated at tab home")
         viewModel.getBestPost()
+        viewModel.getSubscribedSubreddits()
     }
 }

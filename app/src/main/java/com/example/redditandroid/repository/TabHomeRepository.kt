@@ -3,8 +3,7 @@ package com.example.redditandroid.repository
 import android.util.Log
 import com.example.redditandroid.api.ApiService
 import com.example.redditandroid.api.ServiceBuilder
-import com.example.redditandroid.models.PostData
-import com.example.redditandroid.models.PostDataParent
+import com.example.redditandroid.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,7 +35,40 @@ class TabHomeRepository{
                     Log.d("response post",response?.body()!!.data.children.toString())
                 }
                 else
-                    Log.d("Respone","Posts could not be fetched")
+                    Log.d("Response","Posts could not be fetched")
+            }
+        }
+    }
+
+    fun getSubredditInfo(subName:String){
+        GlobalScope.launch {
+            withContext(Dispatchers.IO){
+                val response:Response<SubredditParent> = apiService.getSubredditInfo(subName)
+
+                if(response.isSuccessful && response.body()!=null){
+                    for(obs in mObservers){
+//                        dfsf
+                    }
+                }
+                else
+                    Log.d("Response","Error fetching subreddit info")
+            }
+        }
+    }
+
+    fun getSubscribedSubreddits(){
+        GlobalScope.launch {
+            withContext(Dispatchers.IO){
+                val response:Response<SubredditMineListingParent> = apiService.getSubredditSubscriber("subscriber")
+
+                if(response.isSuccessful && response.body()!=null){
+
+                    for(obs in mObservers){
+                        obs.SubredditInfoFetched(response?.body()!!.data)
+                    }
+                }
+                else
+                    Log.d("Response","Error fetching subreddit info ${response.errorBody()}")
             }
         }
     }
