@@ -19,10 +19,13 @@ data class RedditVideo (
 data class PostData(
     val author:String, val saved:Boolean, val title:String, val subreddit_name_prefixed:String,
     val thumbnail_height:Int, val total_awards_received:String, val score:Int,
-    val thumbnail:String, val id:String, val num_comments:Int, val is_video:Boolean, val media:RedditVideo?, val over_18:Boolean,
+    val thumbnail:String, val id:String, val num_comments:Int, val is_video:Boolean, val media:Media?, val over_18:Boolean,
     val createdUTC:Double, val url:String, val all_awardings:ArrayList<Award>
 )
 
+data class Media(
+    val reddit_video : RedditVideo
+)
 data class Award(
     val resized_icons:ArrayList<ResizedAward>
 )

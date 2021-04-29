@@ -106,7 +106,7 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager):RecyclerVi
                 holder.postImg.visibility = View.INVISIBLE
                 simpleExoPlayer = videoPlaybackService.buildPlayer(mContext)
                 holder.exoPlayerView.player = simpleExoPlayer
-                setVideo(dashURL = theItem.media.dash_url)
+                setVideo(dashURL = theItem.media.reddit_video.dash_url)
             }
         }
 

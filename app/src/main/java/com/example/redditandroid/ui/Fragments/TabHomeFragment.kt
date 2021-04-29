@@ -138,7 +138,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
         val numList = mutableListOf<String>()
         for(ent in postData1Children){
             if(ent.data.is_video && ent.data.media!=null) {
-                vidList?.add(ent.data.media)
+                vidList?.add(ent.data.media.reddit_video)
                 numList.add(ent.data.title)
                 Log.d("NUM_LIST",numList.toString())
             }

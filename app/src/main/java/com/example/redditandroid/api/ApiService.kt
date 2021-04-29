@@ -41,6 +41,9 @@ interface ApiService {
     @GET(value="best?limit=15")
     suspend fun getPostListing():Response<PostDataParent>
 
+    @GET(value="r/{subreddit_name}/about")
+    suspend fun getSubredditInfo(@Path("subreddit_name")subredditName:String):Response<SubredditParent>
+
 
 
 
