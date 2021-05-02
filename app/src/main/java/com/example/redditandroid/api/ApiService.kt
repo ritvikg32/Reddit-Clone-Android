@@ -1,9 +1,11 @@
 package com.example.redditandroid.api
 
 import com.example.redditandroid.models.*
+import com.google.gson.JsonElement
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -46,6 +48,10 @@ interface ApiService {
 
     @GET(value = "subreddits/mine/{where}")
     suspend fun getSubredditSubscriber(@Path("where")infoType:String):Response<SubredditMineListingParent>
+
+    @FormUrlEncoded
+    @POST(value = "api/vote")
+    suspend fun castVote(@Field("id") id:String, @Field("dir") dir:Int):Response<JsonElement>
 
 
 

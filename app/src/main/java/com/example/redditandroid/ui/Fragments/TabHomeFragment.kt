@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -26,6 +27,7 @@ import com.example.redditandroid.models.SubredditParentMine
 import com.example.redditandroid.mv.TabHomeViewModel
 import com.example.redditandroid.ui.Adapter.PostRecyclerView
 import com.example.redditandroid.ui.Adapter.PostRvAdapter
+import com.example.redditandroid.ui.Adapter.VoteCasted
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,7 +38,7 @@ private const val ARG_PARAM2 = "param2"
 
 
 
-class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
+class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCasted {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -45,6 +47,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
     lateinit var postRvAdapter:PostRvAdapter
     private lateinit var progressBar:ProgressBar
     lateinit var userAuth:UserAuthentication
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
 
     var postList:ArrayList<PostData1Children> = ArrayList<PostData1Children>()
@@ -65,7 +68,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
         }
 
         if(viewModel.postList.value == null)
-            viewModel.getBestPost()
+            viewModel.getBestPost(false)
         if(viewModel.subscribedSubredditList.value==null)
             viewModel.getSubscribedSubreddits()
     }
@@ -82,14 +85,18 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
         val spinnerImgArray = arrayOf<Int>(R.drawable.ic_shuttle,R.drawable.ic_fire,R.drawable.ic_resource_new,R.drawable.ic_top_three,R.drawable.ic_flash,R.drawable.ic_success)
 
         postRv = view.findViewById(R.id.home_tab_rv)
-        postRv.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        postRvAdapter = activity?.applicationContext?.let { PostRvAdapter(it, initGlide())}!!
-        postRv.adapter = postRvAdapter
+        initRecyclerview()
 
         progressBar = view.findViewById(R.id.progress_bar)
         progressBar.visibility = View.VISIBLE
+        swipeRefreshLayout = view.findViewById(R.id.refresh_layout)
 
 //        if(UserAuthentication.isUserAuthenticated)
+
+        swipeRefreshLayout.setOnRefreshListener{
+            viewModel.getBestPost(true)
+            initRecyclerview()
+        }
 
 
 
@@ -118,6 +125,12 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
         return view
     }
 
+    private fun initRecyclerview(){
+        postRv.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        postRvAdapter = activity?.applicationContext?.let { PostRvAdapter(it, initGlide(),this)}!!
+        postRv.adapter = postRvAdapter
+    }
+
     private fun initGlide(): RequestManager {
         val options = RequestOptions()
             .placeholder(R.drawable.white_background)
@@ -142,6 +155,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
             progressBar.visibility = View.GONE
             postRvAdapter.postList = it
             postRvAdapter.notifyDataSetChanged()
+            swipeRefreshLayout.isRefreshing = false
 //            postRv.setMediaObjects(getVideoList(it))
         })
 
@@ -192,7 +206,11 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication {
 
     override fun onUserAuthenticated() {
         Log.d("post","User authenticated at tab home")
-        viewModel.getBestPost()
+        viewModel.getBestPost(false)
         viewModel.getSubscribedSubreddits()
+    }
+
+    override fun onVoteCasted(id: String, dir: Int) {
+        viewModel.castVote(id, dir)
     }
 }

@@ -20,7 +20,7 @@ data class PostData(
     val author:String, val saved:Boolean, val title:String, val subreddit_name_prefixed:String,
     val thumbnail_height:Int, val total_awards_received:String, val score:Int,
     val thumbnail:String, val id:String, val num_comments:Int, val is_video:Boolean, val media:Media?, val over_18:Boolean,
-    val createdUTC:Double, val url:String, val all_awardings:ArrayList<Award>
+    val createdUTC:Double, val url:String, val all_awardings:ArrayList<Award>, val likes:Boolean?
 )
 
 data class Media(

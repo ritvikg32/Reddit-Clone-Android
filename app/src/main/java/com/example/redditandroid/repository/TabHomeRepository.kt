@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.redditandroid.api.ApiService
 import com.example.redditandroid.api.ServiceBuilder
 import com.example.redditandroid.models.*
+import com.google.gson.JsonElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -69,6 +70,20 @@ class TabHomeRepository{
                 }
                 else
                     Log.d("Response","Error fetching subreddit info ${response.errorBody()}")
+            }
+        }
+    }
+
+    fun castVote(id:String, dir:Int){
+        GlobalScope.launch {
+            withContext(Dispatchers.IO){
+                val response:Response<JsonElement> = apiService.castVote(id = id,dir = dir)
+
+                if(response.isSuccessful && response.body()==null){
+                    Log.d("Response","Vote casted successfully")
+                }
+                else
+                    Log.d("response","couldn't cast vote")
             }
         }
     }

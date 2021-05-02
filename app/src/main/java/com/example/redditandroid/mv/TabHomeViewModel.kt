@@ -37,14 +37,18 @@ class TabHomeViewModel: ViewModel(), TabHomeObserver{
         repository.registerObserver(this)
     }
 
-    fun getBestPost(){
-        if(postList.value==null)
+    fun getBestPost(forceUpdate:Boolean){
+        if(postList.value==null || forceUpdate)
             repository.getBestPost()
     }
 
     fun getSubscribedSubreddits(){
         if(subscribedSubredditList.value==null)
             repository.getSubscribedSubreddits()
+    }
+
+    fun castVote(id:String, dir:Int){
+        repository.castVote(id, dir)
     }
 
 
