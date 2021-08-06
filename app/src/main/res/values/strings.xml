@@ -29,6 +29,7 @@
         <item>Home</item>
         <item>Popular</item>
     </string-array>
+    <string name="search_label">Search</string>
 
 
     //Home Actibity spinner items

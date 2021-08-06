@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.SearchView
 import android.widget.Spinner
 import androidx.core.graphics.drawable.toBitmap
 import androidx.viewpager.widget.ViewPager
@@ -29,6 +30,8 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
+ * create an instance of this fragment.
+ * create an instance of this fragment.
  */
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -36,6 +39,7 @@ class HomeFragment : Fragment() {
     private var param2: String? = null
 
     private var mContext:Context? = null
+    lateinit var searchView:SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,9 @@ class HomeFragment : Fragment() {
 
         val viewPager = view.findViewById<ViewPager>(R.id.home_view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.home_tab_layout)
+        searchView = view.findViewById<SearchView>(R.id.home_search)
+
+
 
 
         val pagerAdapter = HomeTabAdapter(activity!!.supportFragmentManager,context!!)

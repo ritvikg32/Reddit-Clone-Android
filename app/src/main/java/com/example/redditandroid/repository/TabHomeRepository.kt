@@ -23,11 +23,11 @@ class TabHomeRepository{
             mObservers.add(observer)
     }
 
-    fun getBestPost(){
+    fun getPosts(filterType:String, limit:Int){
         Log.d("post","repo function gets called")
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.IO){
-                val response: Response<PostDataParent> = apiService.getPostListing()
+                val response: Response<PostDataParent> = apiService.getPostListing(filterType = filterType, limit = limit)
 
                 if(response.isSuccessful && response.body()!=null){
                     for(obs in mObservers)
@@ -84,6 +84,20 @@ class TabHomeRepository{
                 }
                 else
                     Log.d("response","couldn't cast vote")
+            }
+        }
+    }
+
+    fun searchSubreddit(query:String, exact:Boolean){
+        GlobalScope.launch {
+            withContext(Dispatchers.IO){
+                val response:Response<SearchSR> = apiService.searchSubReddit(query, exact)
+
+                if(response.isSuccessful && response.body()!=null){
+                    for(obs in mObservers){
+                        obs.OnSearchResultFetched(response.body()!!)
+                    }
+                }
             }
         }
     }

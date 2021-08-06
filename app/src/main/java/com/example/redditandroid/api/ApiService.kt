@@ -40,8 +40,8 @@ interface ApiService {
     suspend fun getUserCredentials():Response<NavigationHeader>
 
 
-    @GET(value="best?limit=15")
-    suspend fun getPostListing():Response<PostDataParent>
+    @GET(value="{post_filter}")
+    suspend fun getPostListing(@Path("post_filter") filterType:String, @Query("limit") limit:Int):Response<PostDataParent>
 
     @GET(value="r/{subreddit_name}/about")
     suspend fun getSubredditInfo(@Path("subreddit_name")subredditName:String):Response<SubredditParent>
@@ -53,7 +53,8 @@ interface ApiService {
     @POST(value = "api/vote")
     suspend fun castVote(@Field("id") id:String, @Field("dir") dir:Int):Response<JsonElement>
 
-
+    @POST(value="api/search_reddit_names")
+    suspend fun searchSubReddit(@Query("query") query:String, @Query("exact") exact:Boolean):Response<SearchSR>
 
 
 

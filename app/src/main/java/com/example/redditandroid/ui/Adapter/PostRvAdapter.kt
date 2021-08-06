@@ -181,6 +181,16 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager, activity:F
 
     }
 
+    override fun onViewAttachedToWindow(holder: myViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.exoPlayerView.player?.play()
+    }
+
+    override fun onViewRecycled(holder: myViewHolder) {
+        super.onViewRecycled(holder)
+        holder.exoPlayerView.player?.release()
+    }
+
     fun checkForUpvote(holder:myViewHolder, theItem: PostData){
         if(theItem.likes!=null) {
             if (theItem.likes) {
@@ -242,6 +252,11 @@ class PostRvAdapter(mContext:Context, requestManager: RequestManager, activity:F
                 Log.d("getter","null")
         }
         return null
+    }
+
+    override fun onViewDetachedFromWindow(holder: myViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.exoPlayerView.player?.stop()
     }
 
     fun getVoteNofromInt(votes:Int):String{

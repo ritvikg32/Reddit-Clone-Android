@@ -1,5 +1,9 @@
 package com.example.redditandroid.models
 
+data class SearchSR(
+    val name: ArrayList<String>
+)
+
 data class SubredditParent(
     val kind:String,
     val subreddit_data:Subreddit

@@ -2,7 +2,7 @@ package com.example.redditandroid.models
 
 
 
-data class User( val username: String?, val reddit_coins:Int?, val display_picture:String?, val date_joined:String?, val karma:Int?)
+data class User(val username: String?, val reddit_coins:Int?, val display_picture:String?, val date_joined:String?, val karma:Int?)
 
 data class UserRegistrationModel(val response: String, val email:String, val username:String, val token:String)
 

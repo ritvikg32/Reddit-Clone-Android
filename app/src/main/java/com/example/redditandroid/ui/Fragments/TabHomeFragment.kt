@@ -1,16 +1,16 @@
 package com.example.redditandroid.ui.Fragments
 
+import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupWindow
-import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.*
+
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +28,7 @@ import com.example.redditandroid.mv.TabHomeViewModel
 import com.example.redditandroid.ui.Adapter.PostRecyclerView
 import com.example.redditandroid.ui.Adapter.PostRvAdapter
 import com.example.redditandroid.ui.Adapter.VoteCasted
+import kotlinx.android.synthetic.main.fragment_tab_home.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,7 +39,7 @@ private const val ARG_PARAM2 = "param2"
 
 
 
-class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCasted {
+class TabHomeFragment : androidx.fragment.app.Fragment(), UserAuthentication.Authentication, VoteCasted {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -68,7 +69,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
         }
 
         if(viewModel.postList.value == null)
-            viewModel.getBestPost(false)
+            viewModel.getPosts(false,"best")
         if(viewModel.subscribedSubredditList.value==null)
             viewModel.getSubscribedSubreddits()
     }
@@ -94,8 +95,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
 //        if(UserAuthentication.isUserAuthenticated)
 
         swipeRefreshLayout.setOnRefreshListener{
-            viewModel.getBestPost(true)
-            initRecyclerview()
+            updateRvData("best")
         }
 
 
@@ -112,7 +112,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
         filterPost.setOnClickListener(object :View.OnClickListener{
             override fun onClick(p0: View?) {
                 setPopUpWindow()
-                popupWindow?.showAsDropDown(p0,-150,0)
+
             }
 
         })
@@ -123,6 +123,13 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
 
 
         return view
+    }
+
+
+    private fun updateRvData(filterType:String){
+        progressBar.visibility = View.VISIBLE
+        initRecyclerview()
+        viewModel.getPosts(true, filterType)
     }
 
     private fun initRecyclerview(){
@@ -167,21 +174,25 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
 
 
     fun setPopUpWindow(){
-        val inflater:LayoutInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        val view = inflater.inflate(R.layout.spinner_item,null)
+        val popup: PopupMenu = PopupMenu(context, filter_btn)
+        popup.menuInflater.inflate(R.menu.tab_home_popup, popup.menu)
 
-        popupWindow = PopupWindow(view,300,LinearLayout.LayoutParams.WRAP_CONTENT,true)
-
-        view.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(p0: View?) {
-                when(p0){
-//                    R.id.best_layout ->
+        popup.setOnMenuItemClickListener(object: PopupMenu.OnMenuItemClickListener{
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when(item?.itemId){
+                    R.id.best_post -> updateRvData("best")
+                    R.id.hot_post -> updateRvData("hot")
+                    R.id.top_post -> updateRvData("top")
+                    R.id.contr_post -> updateRvData("random")
+                    R.id.rating_post -> updateRvData("rising")
                 }
+
+                return true
             }
 
         })
-
+        popup.show()
     }
 
     companion object {
@@ -206,7 +217,7 @@ class TabHomeFragment : Fragment(), UserAuthentication.Authentication, VoteCaste
 
     override fun onUserAuthenticated() {
         Log.d("post","User authenticated at tab home")
-        viewModel.getBestPost(false)
+        viewModel.getPosts(false,"best")
         viewModel.getSubscribedSubreddits()
     }
 

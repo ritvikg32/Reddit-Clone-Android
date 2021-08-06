@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/best_post"
+        android:title="Best"
+        android:icon="@drawable/ic_shuttle"/>
+    <item android:id="@+id/hot_post"
+        android:title="Hot"
+        android:icon="@drawable/ic_fire"/>
+    <item android:id="@+id/top_post"
+        android:title="Top"
+        android:icon="@drawable/ic_resource_new"/>
+    <item android:id="@+id/contr_post"
+        android:title="Controversial"
+        android:icon="@drawable/ic_flash"/>
+    <item android:id="@+id/rating_post"
+        android:title="Rating"
+        android:icon="@drawable/ic_success"/>
+
+</menu>
